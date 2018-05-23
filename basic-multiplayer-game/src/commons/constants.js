@@ -14,52 +14,52 @@ export const KEYS = {
 export const TILES = {
 	0: {
 		type: 'floor',
-		x: 320,
+		x: 0,
 		y: 0,
 		w: 80,
 		h: 55
 	},
 	1: {
 		type: 'wall',
-		x: 240,
+		x: 160,
 		y: 0,
 		w: 80,
 		h: 55
 	},	
 	2: {
 		type: 'finish',
-		x: 160,
+		x: 80,
 		y: 0,
 		w: 80,
 		h: 55
 	},
 	3: {
-		type: 'player1',
+		type: 'player',
 		x: 0,
-		y: 0,
+		y: 55,
 		w: 80,
-		h: 55
+		h: 47
 	},
 	4: {
-		type: 'player2',
+		type: 'player',
 		x: 80,
-		y: 0,
+		y: 55,
 		w: 80,
-		h: 55
+		h: 47
 	},
 	5: {
-		type: 'player3',
-		x: 0,
+		type: 'player',
+		x: 160,
 		y: 55,
 		w: 80,
-		h: 55
+		h: 47
 	},
 	6: {
-		type: 'player4',
-		x: 80,
+		type: 'player',
+		x: 240,
 		y: 55,
 		w: 80,
-		h: 55
+		h: 47
 	}
 };
 

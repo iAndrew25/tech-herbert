@@ -1,49 +1,45 @@
 const express = require('express');
-	http = require('http'),
 	WebSocket = require('ws');
-	path = require('path');
+	path = require('path'),
+	generatePlayer = require('./player');
 
 const app = express(),
 	port = 8000,
-	server = http.createServer(app),
-	wss = new WebSocket.Server({ server });
+	wss = new WebSocket.Server({ port: 8001 });
 
-const generatePlayer = require('./player');
+let players = [];
 
 app.use(express.static(path.join(__dirname + '/../')));
 app.get('/', (req, res) => res.sendFile(path.join(__dirname + '/../index.html')));
 
-let players = [],
-	noticeAllClients = message => {
-		wss.clients.forEach(client => {
-			if(client.readyState === WebSocket.OPEN) {
-				client.send(JSON.stringify(message));
-			}
-		})
-	};
+const noticeAllClients = message => {
+	wss.clients.forEach(client => client.send(JSON.stringify(message)));
+}
 
-wss.on('connection', (ws, req) => {
+wss.on('connection', ws => {
 	let newPlayer = generatePlayer();
 	ws.id = newPlayer.id;
 	players.push(newPlayer);
 
 	ws.send(JSON.stringify({type: 'GET_ME', payload: newPlayer}));
+
 	noticeAllClients({type: 'GET_PLAYERS', payload: players});
 
-	ws.on('close', function close() {
+	console.log('New Player. Total players', wss.clients.size);
+
+	ws.on('close', () => {
 		players = players.filter(player => player.id !== ws.id);
-		
 		noticeAllClients({type: 'GET_PLAYERS', payload: players});
 	});
 
 	ws.on('message', message => {
-		const parsedData = typeof message === 'string' ? JSON.parse(message) : message;
+		const {type, payload} = JSON.parse(message);
 
-		switch(parsedData.type) {
+		switch(type) {
 			case 'PLAYER_MOVE':
 				players = players.map(player => {
-					if(player.id === parsedData.payload.id) {
-						player = parsedData.payload;
+					if(player.id === payload.id) {
+						player = payload;
 					}
 					return player;
 				});
@@ -54,7 +50,6 @@ wss.on('connection', (ws, req) => {
 				players = players.map(player => {
 					player.x = 1;
 					player.y = 1;
-
 					return player;
 				});
 
@@ -65,4 +60,4 @@ wss.on('connection', (ws, req) => {
 	});
 });
 
-server.listen(port, () => console.log(`Listening on port ${port}`));
+app.listen(port, () => console.log(`Listening on port ${port}`));

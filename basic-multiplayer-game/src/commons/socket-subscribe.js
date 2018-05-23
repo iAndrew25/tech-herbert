@@ -17,11 +17,11 @@ sw.onmessage = ({data}) => {
 
 const subscribe = (id, options = {}) => {
 	if(!id || !Object.keys(options).length) return;
-	const x = () => {};
+	const defaultCb = () => {};
 
 	Object.keys(options).forEach(subscription => {
 		subscribers[subscription] = Object.assign({}, subscribers[subscription], {
-			[id]: options[subscription] || x
+			[id]: options[subscription] || defaultCb
 		})
 	});
 };

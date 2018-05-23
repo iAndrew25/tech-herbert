@@ -3,9 +3,9 @@ const socket = (function() {
 
 	function createInstance() {
 		if(window.ReconnectingWebSocket) {
-			return new window.ReconnectingWebSocket(`ws://is-offline:8000`);
+			return new window.ReconnectingWebSocket(`ws://localhost:8001`);
 		} else if(window.WebSocket) {
-			return new window.WebSocket(`ws://is-offline:8000`);
+			return new window.WebSocket(`ws://localhost:8001`);
 		} else {
 			return {};
 		}
